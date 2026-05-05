@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Kalkulator Usia Koreksi Bayi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #6dd5ed, #2193b0);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .card {
+      background: #fff;
+      padding: 25px;
+      border-radius: 15px;
+      width: 330px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    img {
+      width: 60px;
+      margin-bottom: 5px;
+    }
+
+    h2 {
+      margin-bottom: 15px;
+    }
+
+    label {
+      font-size: 14px;
+      display: block;
+      text-align: left;
+      margin-top: 10px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      background: #2193b0;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #17687f;
+    }
+
+    .result {
+      margin-top: 15px;
+      padding: 10px;
+      background: #f1f1f1;
+      border-radius: 10px;
+      font-size: 14px;
+      text-align: left;
+    }
+
+    .footer {
+      margin-top: 15px;
+      font-size: 12px;
+      color: #777;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <!-- LOGO -->
+  <img src="logo.png" alt="Logo">
+
+  <!-- NAMA APLIKASI -->
+  <h2>Kalkulator Usia Koreksi</h2>
+
+  <!-- INPUT -->
+  <label>Tanggal Lahir Bayi</label>
+  <input type="date" id="tglLahir">
+
+  <label>Usia Kehamilan Saat Lahir (minggu)</label>
+  <input type="number" id="usiaKehamilan" placeholder="Contoh: 32">
+
+  <button onclick="hitung()">Hitung</button>
+
+  <!-- HASIL -->
+  <div class="result" id="hasil"></div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    © 2026<br>
+    Dibuat oleh <b>M Ariffullah</b><br>
+    BaPau GinBal (Barcode Pemantauan Gizi Anak Balita)
+  </div>
+
+</div>
+
+<script>
+function konversiHari(hari) {
+  let bulan = Math.floor(hari / 30);
+  let sisaHari = hari % 30;
+
+  let minggu = Math.floor(sisaHari / 7);
+  let hariSisa = sisaHari % 7;
+
+  return bulan + " bulan " + minggu + " minggu " + hariSisa + " hari";
+}
+
+function hitung() {
+  const tglInput = document.getElementById("tglLahir").value;
+  const usiaKehamilan = parseInt(document.getElementById("usiaKehamilan").value);
+
+  if (!tglInput || !usiaKehamilan) {
+    alert("Lengkapi semua data!");
+    return;
+  }
+
+  const tglLahir = new Date(tglInput);
+  const hariIni = new Date();
+
+  const selisihHari = Math.floor((hariIni - tglLahir) / (1000 * 60 * 60 * 24));
+
+  const prematurMinggu = 40 - usiaKehamilan;
+  const koreksiHari = prematurMinggu * 7;
+
+  const usiaKoreksiHari = selisihHari - koreksiHari;
+
+  document.getElementById("hasil").innerHTML = `
+    <b>Usia Kronologis:</b><br>
+    ${konversiHari(selisihHari)}<br><br>
+
+    <b>Usia Koreksi:</b><br>
+    ${usiaKoreksiHari > 0 ? konversiHari(usiaKoreksiHari) : "0 bulan 0 minggu 0 hari"}<br><br>
+
+    <b>Prematur:</b> ${prematurMinggu} minggu
+  `;
+}
+</script>
+
+</body>
+</html>
